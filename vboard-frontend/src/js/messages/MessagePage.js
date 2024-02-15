@@ -6,6 +6,12 @@ import MessageComponent from './MessageComponent';
 const MessagePage = () => {
     const [messages, setMessages] = useState([]);
 
+    // const handleLogout = () => {
+    //     localStorage.removeItem('isLoggedIn');
+    //     window.location.href = '/login';
+    // }
+    // Dummy method for now
+
     useEffect(() => {
         const fetchMessages = async () => {
             const response = await axios.get('http://localhost:8080/api/messages');

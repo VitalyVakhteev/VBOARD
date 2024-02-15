@@ -9,6 +9,7 @@ const MessageComponent = ({ message, level = 0 }) => {
             <p>{message.body}</p>
             {message.childList && message.childList.map(child =>
                 <MessageComponent key={child.id} message={child} level={level + 1} />
+            //     TODO: FIX INDENTATION
             )}
         </div>
     );
