@@ -3,7 +3,7 @@
  *  Date: 01/22/24
  */
 
-package main.java.bboard;
+package VBOARD.vboard;
 
 import org.mindrot.jbcrypt.BCrypt;
 

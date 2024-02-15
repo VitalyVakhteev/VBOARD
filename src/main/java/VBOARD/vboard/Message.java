@@ -3,7 +3,9 @@
  *  Date: 01/22/24
  */
 
-package main.java.bboard;
+package VBOARD.vboard;
+
+import lombok.Getter;
 
 import java.util.ArrayList;
 
@@ -11,9 +13,13 @@ import java.util.ArrayList;
  * Represents a message in a message board system. This class serves as a base for both topic posts and replies.
  */
 public class Message {
+	@Getter
 	private final String author;
+	@Getter
 	private final String subject;
+	@Getter
 	private final String body;
+	@Getter
 	private final int id;
 	private ArrayList<Message> childList;
 
@@ -48,19 +54,6 @@ public class Message {
 				}
 			}
 		}
-	}
-
-	public String getAuthor() {
-		return author;
-	}
-	public String getBody() {
-		return body;
-	}
-	public String getSubject() {
-		return subject;
-	}
-	public int getId() {
-		return id;
 	}
 
 	public void addChild(Message child){

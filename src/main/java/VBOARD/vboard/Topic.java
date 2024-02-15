@@ -3,7 +3,7 @@
  *  Date: 01/22/24
  */
 
-package main.java.bboard;
+package VBOARD.vboard;
 
 /**
  * Represents a Topic in a message board. A Topic is a specific type of Message that

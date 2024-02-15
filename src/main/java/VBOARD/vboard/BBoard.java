@@ -3,7 +3,7 @@
  *  Date: 01/22/24
  */
 
-package main.java.bboard;
+package VBOARD.vboard;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

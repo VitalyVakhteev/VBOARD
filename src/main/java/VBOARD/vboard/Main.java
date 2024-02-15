@@ -5,9 +5,8 @@
  *  It initializes a bulletin board and starts its execution.
 */
 
-package main.java;
+package VBOARD.vboard;
 
-import main.java.bboard.BBoard;
 import java.io.FileNotFoundException;
 
 class Main {

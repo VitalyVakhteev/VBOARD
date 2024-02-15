@@ -1,1 +1,25 @@
 .idea
+target
+
+src/main/resources/users.txt
+
+vboard-frontend/node_modules
+vboard-frontend/.pnp
+vboard-frontend/.pnp.js
+
+# testing
+vboard-frontend/coverage
+
+# production
+vboard-frontend/build
+
+# misc
+vboard-frontend/.DS_Store
+vboard-frontend/.env.local
+vboard-frontend/.env.development.local
+vboard-frontend/.env.test.local
+vboard-frontend/.env.production.local
+
+vboard-frontend/npm-debug.log*
+vboard-frontend/yarn-debug.log*
+vboard-frontend/yarn-error.log*
