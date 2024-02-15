@@ -4,6 +4,7 @@ target
 
 src/main/resources/users.txt
 
+vboard-frontend/.idea
 vboard-frontend/node_modules
 vboard-frontend/.pnp
 vboard-frontend/.pnp.js
