@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +19,11 @@ import java.util.Scanner;
 @Service
 public class UserService {
     private final List<User> users = new ArrayList<>();
+    private final Path usersFilePath;
 
-    @Value("classpath:users.txt")
-    private Resource usersFile;
+    public UserService(@Value("${vboard.userfile.path}") String usersFilePath) {
+        this.usersFilePath = Paths.get(usersFilePath.replace("file:", ""));
+    }
 
     @PostConstruct
     public void init() {
@@ -30,14 +35,18 @@ public class UserService {
     }
 
     private void loadUsers() throws IOException {
-        File file = usersFile.getFile();
-        try (Scanner fileScanner = new Scanner(file)) {
-            while (fileScanner.hasNextLine()) {
-                String[] credentials = fileScanner.nextLine().split(" ", 2);
+        if (!Files.exists(usersFilePath))
+            return;
+        try {
+            List<String> lines = Files.readAllLines(usersFilePath);
+            lines.forEach(line -> {
+                String[] credentials = line.split(" ", 2);
                 if (credentials.length == 2) {
                     users.add(new User(credentials[0], credentials[1], true));
                 }
-            }
+            });
+        } catch (IOException e) {
+            System.err.println("Error: Unable to load users - " + e.getMessage());
         }
     }
 

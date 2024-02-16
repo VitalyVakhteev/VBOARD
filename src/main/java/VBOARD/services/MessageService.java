@@ -4,6 +4,7 @@ import VBOARD.vboard.Message;
 import VBOARD.vboard.Reply;
 import VBOARD.vboard.Topic;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,20 +13,25 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class MessageService {
     private final List<Message> messages = new ArrayList<>();
     private final AtomicInteger currentId = new AtomicInteger(0);
-    @Value("classpath:data.json")
-    private Resource dataFile;
+
+    private final Path dataFilePath;
+
+    public MessageService(@Value("${vboard.datafile.path}") String filePath) {
+        this.dataFilePath = Paths.get(filePath.replace("file:", ""));
+    }
 
     @PostConstruct
     public void init() {
@@ -39,18 +45,20 @@ public class MessageService {
     }
 
     private void loadHistory() throws IOException {
+        if (!Files.exists(dataFilePath))
+            return;
+
+        String content = new String(Files.readAllBytes(dataFilePath));
         Gson gson = new Gson();
         Type type = new TypeToken<Map<String, List<Map<String, Object>>>>() {}.getType();
-        try (FileReader reader = new FileReader(dataFile.getFile())) {
-            Map<String, List<Map<String, Object>>> data = gson.fromJson(reader, type);
-            List<Map<String, Object>> topics = data.get("topics");
+        Map<String, List<Map<String, Object>>> data = gson.fromJson(content, type);
+        List<Map<String, Object>> topics = data.get("topics");
 
-            topics.forEach(topicData -> {
-                Topic topic = parseTopic(topicData);
-                messages.add(topic);
-                parseChildren(topic, topicData);
-            });
-        }
+        topics.forEach(topicData -> {
+            Topic topic = parseTopic(topicData);
+            messages.add(topic);
+            parseChildren(topic, topicData);
+        });
     }
 
     private Topic parseTopic(Map<String, Object> data) {
@@ -99,6 +107,57 @@ public class MessageService {
     }
 
     /**
+     * Save history to local file.
+     */
+    private void saveHistory() throws IOException {
+        Map<String, List<Map<String, Object>>> structuredData = new HashMap<>();
+        List<Map<String, Object>> topicsList = new ArrayList<>();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        messages.stream()
+                .filter(message -> message instanceof Topic)
+                .forEach(topic -> {
+                    Map<String, Object> topicData = convertToMap(topic);
+                    List<Map<String, Object>> childrenData = new ArrayList<>();
+                    addChildrenData(topic, childrenData);
+                    topicData.put("children", childrenData);
+                    topicsList.add(topicData);
+                });
+
+        structuredData.put("topics", topicsList);
+        String json = gson.toJson(structuredData);
+        Files.write(dataFilePath, json.getBytes());
+    }
+
+    /**
+     * Recursively adds children replies to the provided list.
+     */
+    private void addChildrenData(Message parent, List<Map<String, Object>> childrenData) {
+        for (Message child : parent.getChildren()) {
+            Map<String, Object> childData = convertToMap(child);
+            if (!child.getChildren().isEmpty()) {
+                List<Map<String, Object>> grandChildrenData = new ArrayList<>();
+                addChildrenData(child, grandChildrenData);
+                childData.put("children", grandChildrenData);
+            }
+            childrenData.add(childData);
+        }
+    }
+
+    /**
+     * Converts a Message (or Topic/Reply) to a Map representation suitable for JSON serialization.
+     */
+    private Map<String, Object> convertToMap(Message message) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", message.getId());
+        map.put("from", message.getAuthor());
+        map.put("subject", message.getSubject());
+        map.put("body", message.getBody());
+        // Add additional properties as needed
+        return map;
+    }
+
+    /**
      * Add a new topic to the message board.
      * @param author The author of the message.
      * @param subject The subject of the message.
@@ -108,6 +167,13 @@ public class MessageService {
     public Message addTopic(String author, String subject, String body) {
         Message topic = new Message(author, subject, body, currentId.incrementAndGet());
         messages.add(topic);
+
+        try {
+            saveHistory();
+        } catch (IOException e) {
+            System.err.println("Error: Unable to save message history - " + e.getMessage());
+        }
+
         return topic;
     }
 
@@ -115,17 +181,19 @@ public class MessageService {
      * Add a reply to an existing message.
      * @param parentId The ID of the message to reply to.
      * @param author The author of the reply.
+     * @param subject The subject of the reply. If null or empty, default to "Re: parent's subject".
      * @param body The body of the reply.
      * @return The added reply, or null if the parent message does not exist.
      */
-    public Message addReply(int parentId, String author, String body) {
+    public Message addReply(int parentId, String author, String subject, String body) {
         Optional<Message> parentMessageOpt = messages.stream()
                 .filter(message -> message.getId() == parentId)
                 .findFirst();
 
         if (parentMessageOpt.isPresent()) {
             Message parentMessage = parentMessageOpt.get();
-            Message reply = new Message(author, "Re: " + parentMessage.getSubject(), body, currentId.incrementAndGet());
+            String finalSubject = (subject == null || subject.isEmpty()) ? "Re: " + parentMessage.getSubject() : subject;
+            Reply reply = new Reply(author, finalSubject, body, currentId.incrementAndGet());
             parentMessage.addChild(reply);
             messages.add(reply);
             return reply;

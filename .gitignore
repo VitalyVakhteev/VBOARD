@@ -2,7 +2,7 @@
 VBOARD.iml
 target
 
-src/main/resources/users.txt
+src/main/java/VBOARD/data/users.txt
 
 vboard-frontend/.idea
 vboard-frontend/node_modules

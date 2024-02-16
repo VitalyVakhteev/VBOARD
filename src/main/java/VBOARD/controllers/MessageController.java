@@ -33,7 +33,8 @@ public class MessageController {
     // Add a reply
     @PostMapping("/reply")
     public ResponseEntity<?> addReply(@RequestParam("parentId") int parentId, @RequestBody Message reply) {
-        Message newReply = messageService.addReply(parentId, reply.getAuthor(), reply.getBody());
+        String subject = reply.getSubject();
+        Message newReply = messageService.addReply(parentId, reply.getAuthor(), subject, reply.getBody());
         if (newReply == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Parent message not found");
         }

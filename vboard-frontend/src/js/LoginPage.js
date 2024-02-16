@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const LoginPage = ({ onLoginSuccess }) => {
+const LoginPage = ({ setIsLoggedIn }) => {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -14,7 +14,9 @@ const LoginPage = ({ onLoginSuccess }) => {
             const response = await axios.post('http://localhost:8080/api/users/login', { username, password });
             if (response.data === "User authenticated") {
                 localStorage.setItem('isLoggedIn', 'true');
+                setIsLoggedIn(true);
                 navigate('/messages');
+
             } else {
                 setErrorMessage("Incorrect username or password");
             }

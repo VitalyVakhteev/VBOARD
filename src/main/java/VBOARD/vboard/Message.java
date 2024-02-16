@@ -69,4 +69,8 @@ public class Message {
 				", ID=" + id +
 				'}';
 	}
+
+	public ArrayList<Message> getChildren() {
+		return childList;
+	}
 }
