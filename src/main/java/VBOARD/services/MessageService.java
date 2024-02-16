@@ -165,7 +165,7 @@ public class MessageService {
      * @return The added topic.
      */
     public Message addTopic(String author, String subject, String body) {
-        Message topic = new Message(author, subject, body, currentId.incrementAndGet());
+        Message topic = new Topic(author, subject, body, currentId.incrementAndGet());
         messages.add(topic);
 
         try {

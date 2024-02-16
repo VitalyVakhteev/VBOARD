@@ -1,74 +1,82 @@
 {
   "topics": [
     {
-      "id": 1,
-      "subject": "CS12 Assignment 7",
-      "from": "messi",
       "children": [
         {
-          "id": 6,
           "subject": "Re: CS12 Assignment 7",
           "from": "messi",
+          "id": 6,
           "body": "BUMP"
         },
         {
-          "id": 9,
           "subject": "Re: CS12 Assignment 7",
           "from": "messi",
+          "id": 9,
           "body": "BUMP"
         }
       ],
-      "body": "The assignment is hard so go step by step.\nYou can read the Tips & Tricks part for some help.\nHas anyone started already?"
+      "subject": "CS12 Assignment 7",
+      "from": "messi",
+      "id": 1,
+      "body": "The assignment is hard so go step by step.\nYou can read the Tips \u0026 Tricks part for some help.\nHas anyone started already?"
     },
     {
-      "id": 2,
-      "subject": "Your favorite TV show",
-      "from": "ricq7",
       "children": [
         {
-          "id": 3,
-          "subject": "Re: Your favorite TV show",
-          "from": "mike",
           "children": [
             {
-              "id": 4,
-              "subject": "Re: Your favorite TV show",
-              "from": "ricq7",
               "children": [
                 {
-                  "id": 8,
                   "subject": "Re: Your favorite TV show",
                   "from": "mike",
-                  "body": "I'll check that.\nThanks."
+                  "id": 8,
+                  "body": "I\u0027ll check that.\nThanks."
                 }
               ],
+              "subject": "Re: Your favorite TV show",
+              "from": "ricq7",
+              "id": 4,
               "body": "Well the book is one hell of a resource.\nAnd, the script is written very loyal to the text."
             }
           ],
+          "subject": "Re: Your favorite TV show",
+          "from": "mike",
+          "id": 3,
           "body": "Game of Thrones is an awesome show but there are too \nmany characters to remember.\nWe even did not see half of the families and still at least 20 \nimportant characters are introduced already.\nIs there anyplace that I can read about the characters?"
         },
         {
-          "id": 5,
-          "subject": "Re: Your favorite TV show",
-          "from": "ali87",
           "children": [
             {
-              "id": 7,
               "subject": "Re: Your favorite TV show",
               "from": "jenny",
+              "id": 7,
               "body": "The cat!\nColin Mochrie is hilarious."
             }
           ],
+          "subject": "Re: Your favorite TV show",
+          "from": "ali87",
+          "id": 5,
           "body": "Whose line is it anyway!!!\nToo bad, it is no more."
         }
       ],
+      "subject": "Your favorite TV show",
+      "from": "ricq7",
+      "id": 2,
       "body": "So guys, what is your favorite tv show?"
     },
     {
-      "id": 10,
+      "children": [],
       "subject": "Towel Day",
       "from": "messi",
+      "id": 10,
       "body": "Bring your towels on May 25.\nSee here: http://www.towelday.org/"
+    },
+    {
+      "children": [],
+      "subject": "Test.",
+      "from": "vitalyv",
+      "id": 12,
+      "body": "Test"
     }
   ]
 }

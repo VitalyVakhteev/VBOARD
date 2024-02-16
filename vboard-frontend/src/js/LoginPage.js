@@ -14,6 +14,7 @@ const LoginPage = ({ setIsLoggedIn }) => {
             const response = await axios.post('http://localhost:8080/api/users/login', { username, password });
             if (response.data === "User authenticated") {
                 localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('currentUsername', username);
                 setIsLoggedIn(true);
                 navigate('/messages');
 

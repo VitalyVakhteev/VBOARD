@@ -20,15 +20,6 @@ const TopicModal = ({ isOpen, onClose, onSubmit, topic, onInputChange }) => {
                 <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <input
                         type="text"
-                        name="author"
-                        value={topic.author}
-                        onChange={onInputChange}
-                        placeholder="Author"
-                        required
-                        style={inputStyle}
-                    />
-                    <input
-                        type="text"
                         name="subject"
                         value={topic.subject}
                         onChange={onInputChange}
@@ -82,7 +73,6 @@ const MessagePage = ({ setIsLoggedIn }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const toggleModal = () => setModalOpen(!modalOpen);
     const [newTopic, setNewTopic] = useState({
-        author: '',
         subject: '',
         body: ''
     });
@@ -109,9 +99,12 @@ const MessagePage = ({ setIsLoggedIn }) => {
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const author = localStorage.getItem('currentUsername');
+        const topicToSubmit = { ...newTopic, author };
+
         try {
-            await axios.post('http://localhost:8080/api/messages/topic', newTopic);
-            setNewTopic({ author: '', subject: '', body: '' });
+            await axios.post('http://localhost:8080/api/messages/topic', topicToSubmit);
+            setNewTopic({ subject: '', body: '' });
             toggleModal();
             fetchMessages();
         } catch (error) {
@@ -121,7 +114,7 @@ const MessagePage = ({ setIsLoggedIn }) => {
 
     return (
         <div>
-            <h2>Home</h2>
+            <h2 style={{ marginLeft: "10px" }}>Home</h2>
             <button style={{float: "right"}} onClick={handleLogout}>Logout</button>
             <button style={{float: "right"}} onClick={toggleModal}>Add Topic</button>
             <TopicModal isOpen={modalOpen} onClose={toggleModal} onSubmit={handleSubmit} topic={newTopic}
