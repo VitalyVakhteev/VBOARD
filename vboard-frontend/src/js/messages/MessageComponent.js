@@ -8,10 +8,11 @@ const MessageComponent = ({ message, level = 0 }) => {
         padding: '10px',
         marginTop: '10px',
     };
+    const formattedTimestamp = new Date(message.timestamp).toLocaleString();
 
     return (
         <div style={indentationStyle}>
-            <p style={{ fontWeight: 'bold' }}>Author: {message.author} | ID: {message.id}</p>
+            <p style={{ fontWeight: 'bold' }}>{message.author} | #{message.id} | {formattedTimestamp}</p>
             <h4>{message.subject}</h4>
             <p>{message.body}</p>
             {message.childList && message.childList.map(child =>

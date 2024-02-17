@@ -5,6 +5,8 @@
 
 package VBOARD.vboard;
 
+import java.time.LocalDateTime;
+
 /**
  * Represents a Reply in a message board. A Reply is a specific type of Message
  * that is a response to other messages.
@@ -19,8 +21,9 @@ public class Reply extends Message {
 	 * @param body    The body of the reply.
 	 * @param id      The unique identifier of the reply.
 	 */
-	public Reply(String author, String subject, String body, int id) {
+	public Reply(String author, String subject, String body, int id, LocalDateTime timestamp) {
 		super(author, subject, body, id);
+		setTimestamp(timestamp);
 	}
 
 	@Override

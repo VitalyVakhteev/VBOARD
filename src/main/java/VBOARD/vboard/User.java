@@ -5,8 +5,10 @@
 
 package VBOARD.vboard;
 
+import lombok.Getter;
 import org.mindrot.jbcrypt.BCrypt;
 
+@Getter
 public class User {
 	String usr;
 	String hashedPwd;

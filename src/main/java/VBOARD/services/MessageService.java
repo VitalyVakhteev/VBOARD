@@ -8,17 +8,19 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -61,12 +63,27 @@ public class MessageService {
         });
     }
 
+    private LocalDateTime parseTimestamp(String timestampString) {
+        try {
+            return LocalDateTime.ofInstant(Instant.parse(timestampString), ZoneId.systemDefault());
+        } catch (DateTimeParseException e) {
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
+                return LocalDateTime.parse(timestampString, formatter);
+            } catch (DateTimeParseException ex) {
+                throw new RuntimeException("Failed to parse timestamp: " + timestampString, ex);
+            }
+        }
+    }
+
     private Topic parseTopic(Map<String, Object> data) {
         String author = (String) data.get("from");
         String subject = (String) data.get("subject");
         String body = (String) data.get("body");
         int id = ((Double) data.get("id")).intValue();
-        Topic topic = new Topic(author, subject, body, id);
+        String timestampString = (String) data.get("timestamp");
+        LocalDateTime timestamp = parseTimestamp(timestampString);
+        Topic topic = new Topic(author, subject, body, id, timestamp);
         updateCurrentId(id);
         return topic;
     }
@@ -76,7 +93,9 @@ public class MessageService {
         String subject = (String) data.get("subject");
         String body = (String) data.get("body");
         int id = ((Double) data.get("id")).intValue();
-        Reply reply = new Reply(author, subject, body, id);
+        String timestampString = (String) data.get("timestamp");
+        LocalDateTime timestamp = parseTimestamp(timestampString);
+        Reply reply = new Reply(author, subject, body, id, timestamp);
         updateCurrentId(id);
         return reply;
     }
@@ -153,7 +172,7 @@ public class MessageService {
         map.put("from", message.getAuthor());
         map.put("subject", message.getSubject());
         map.put("body", message.getBody());
-        // Add additional properties as needed
+        map.put("timestamp", message.getTimestamp().toString());
         return map;
     }
 
@@ -165,7 +184,8 @@ public class MessageService {
      * @return The added topic.
      */
     public Message addTopic(String author, String subject, String body) {
-        Message topic = new Topic(author, subject, body, currentId.incrementAndGet());
+        LocalDateTime timestamp = LocalDateTime.now();
+        Message topic = new Topic(author, subject, body, currentId.incrementAndGet(), timestamp);
         messages.add(topic);
 
         try {
@@ -193,12 +213,20 @@ public class MessageService {
         if (parentMessageOpt.isPresent()) {
             Message parentMessage = parentMessageOpt.get();
             String finalSubject = (subject == null || subject.isEmpty()) ? "Re: " + parentMessage.getSubject() : subject;
-            Reply reply = new Reply(author, finalSubject, body, currentId.incrementAndGet());
+            LocalDateTime timestamp = LocalDateTime.now();
+            Reply reply = new Reply(author, finalSubject, body, currentId.incrementAndGet(), timestamp);
             parentMessage.addChild(reply);
             messages.add(reply);
+
+            try {
+                saveHistory();
+            } catch (IOException e) {
+                System.err.println("Error: Unable to save message history - " + e.getMessage());
+            }
+
             return reply;
         }
 
-        return null;    // Parent message not found
+        return null;
     }
 }

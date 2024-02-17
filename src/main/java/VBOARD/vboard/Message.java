@@ -6,7 +6,9 @@
 package VBOARD.vboard;
 
 import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -21,6 +23,9 @@ public class Message {
 	private final String body;
 	@Getter
 	private final int id;
+	@Getter
+	@Setter
+	private LocalDateTime timestamp;
 	private ArrayList<Message> childList;
 
 	public Message(String author, String subject, String body, int id) {
@@ -29,6 +34,7 @@ public class Message {
 		this.body = body;
 		this.id = id;
 		childList = new ArrayList<>();
+		this.timestamp = LocalDateTime.now();
 	}
 
 	public void print(int indentation) {

@@ -1,9 +1,9 @@
+// Todo: Write full docs
 package VBOARD.services;
 
 import jakarta.annotation.PostConstruct;
 import VBOARD.vboard.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -72,12 +72,19 @@ public class UserService {
      * @param password The password of the new user.
      * @return true if the user is added successfully, false if the user already exists.
      */
-    public boolean addUser(String username, String password) {
+    public boolean addUser(String username, String password) throws IOException {
         if(users.stream().anyMatch(user -> user.getUsername().equals(username))) {
             return false; // User already exists
         }
         users.add(new User(username, password, false));
+        saveUsers();
         return true;
+    }
+
+    private void saveUsers() throws IOException {
+        List<String> lines = new ArrayList<>();
+        users.forEach(user -> lines.add(user.getUsername() + " " + user.getHashedPwd()));
+        Files.write(usersFilePath, lines);
     }
 
     /**
@@ -88,11 +95,18 @@ public class UserService {
      * @param newPassword The new password to set.
      * @return true if the password was changed successfully, false otherwise.
      */
-    public boolean changePassword(String username, String oldPassword, String newPassword) {
+    public boolean changePassword(String username, String oldPassword, String newPassword) throws IOException {
         Optional<User> foundUser = users.stream()
                 .filter(user -> user.getUsername().equals(username))
                 .findFirst();
 
-        return foundUser.map(user -> user.setPassword(oldPassword, newPassword)).orElse(false);
+        if (foundUser.isPresent() && foundUser.get().check(username, oldPassword)) {
+            boolean passwordChanged = foundUser.get().setPassword(oldPassword, newPassword);
+            if (passwordChanged) {
+                saveUsers();
+                return true;
+            }
+        }
+        return false;
     }
 }

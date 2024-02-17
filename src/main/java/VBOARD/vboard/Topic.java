@@ -5,6 +5,8 @@
 
 package VBOARD.vboard;
 
+import java.time.LocalDateTime;
+
 /**
  * Represents a Topic in a message board. A Topic is a specific type of Message that
  * is not a reply to other messages.
@@ -19,8 +21,9 @@ public class Topic extends Message {
 	 * @param body    The body of the topic.
 	 * @param id      The unique identifier of the topic.
 	 */
-	public Topic(String author, String subject, String body, int id) {
+	public Topic(String author, String subject, String body, int id, LocalDateTime timestamp) {
 		super(author, subject, body, id);
+		setTimestamp(timestamp);
 	}
 
 	@Override

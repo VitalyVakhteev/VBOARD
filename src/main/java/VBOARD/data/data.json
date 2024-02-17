@@ -3,80 +3,84 @@
     {
       "children": [
         {
-          "subject": "Re: CS12 Assignment 7",
-          "from": "messi",
-          "id": 6,
-          "body": "BUMP"
-        },
-        {
-          "subject": "Re: CS12 Assignment 7",
-          "from": "messi",
-          "id": 9,
-          "body": "BUMP"
-        }
-      ],
-      "subject": "CS12 Assignment 7",
-      "from": "messi",
-      "id": 1,
-      "body": "The assignment is hard so go step by step.\nYou can read the Tips \u0026 Tricks part for some help.\nHas anyone started already?"
-    },
-    {
-      "children": [
-        {
           "children": [
             {
               "children": [
                 {
                   "subject": "Re: Your favorite TV show",
                   "from": "mike",
-                  "id": 8,
-                  "body": "I\u0027ll check that.\nThanks."
+                  "id": 6,
+                  "body": "I\u0027ll check that.\nThanks.",
+                  "timestamp": "2023-10-15T21:20:17"
                 }
               ],
               "subject": "Re: Your favorite TV show",
               "from": "ricq7",
-              "id": 4,
-              "body": "Well the book is one hell of a resource.\nAnd, the script is written very loyal to the text."
+              "id": 3,
+              "body": "Well the book is one hell of a resource.\nAnd, the script is written very loyal to the text.",
+              "timestamp": "2023-10-14T20:05:17"
             }
           ],
           "subject": "Re: Your favorite TV show",
           "from": "mike",
-          "id": 3,
-          "body": "Game of Thrones is an awesome show but there are too \nmany characters to remember.\nWe even did not see half of the families and still at least 20 \nimportant characters are introduced already.\nIs there anyplace that I can read about the characters?"
+          "id": 2,
+          "body": "Game of Thrones is an awesome show but there are too many characters to remember.\nWe even did not see half of the families and still at least 20 important characters are introduced already.\nIs there anyplace that I can read about the characters?",
+          "timestamp": "2023-10-14T03:45:17"
         },
         {
           "children": [
             {
               "subject": "Re: Your favorite TV show",
               "from": "jenny",
-              "id": 7,
-              "body": "The cat!\nColin Mochrie is hilarious."
+              "id": 5,
+              "body": "The cat!\nColin Mochrie is hilarious.",
+              "timestamp": "2023-10-17T04:30:17"
             }
           ],
           "subject": "Re: Your favorite TV show",
           "from": "ali87",
-          "id": 5,
-          "body": "Whose line is it anyway!!!\nToo bad, it is no more."
+          "id": 4,
+          "body": "Whose line is it anyway!!!\nToo bad, it is no more.",
+          "timestamp": "2023-10-13T02:10:17"
         }
       ],
       "subject": "Your favorite TV show",
       "from": "ricq7",
-      "id": 2,
-      "body": "So guys, what is your favorite tv show?"
+      "id": 1,
+      "body": "So guys, what is your favorite tv show?",
+      "timestamp": "2023-10-12T05:05:17"
     },
     {
       "children": [],
       "subject": "Towel Day",
       "from": "messi",
-      "id": 10,
-      "body": "Bring your towels on May 25.\nSee here: http://www.towelday.org/"
+      "id": 7,
+      "body": "Bring your towels on May 25.\nSee here: http://www.towelday.org/",
+      "timestamp": "2023-10-17T17:55:17"
+    },
+    {
+      "children": [
+        {
+          "subject": "Re: Favorite Movie",
+          "from": "vitalyv",
+          "id": 9,
+          "body": "I love the movie Fight Club.",
+          "timestamp": "2024-02-16T20:00:18.128691933"
+        }
+      ],
+      "subject": "Favorite Movie",
+      "from": "vitalyv",
+      "id": 8,
+      "body": "Another member mentioned they had a favorite show. But what about a favorite movie?",
+      "timestamp": "2024-02-16T19:59:27.331050903"
     },
     {
       "children": [],
-      "subject": "Test.",
-      "from": "vitalyv",
-      "id": 12,
-      "body": "Test"
+      "subject": "Just registered",
+      "from": "testregister",
+      "id": 10,
+      "body": "Just registered on the forum. What should I do?",
+      "timestamp": "2024-02-16T21:12:41.651931082"
     }
   ]
 }

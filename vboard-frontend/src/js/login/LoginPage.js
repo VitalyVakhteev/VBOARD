@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 const LoginPage = ({ setIsLoggedIn }) => {
     const navigate = useNavigate();
@@ -36,15 +36,16 @@ const LoginPage = ({ setIsLoggedIn }) => {
             <form onSubmit={handleLogin}>
                 <div>
                     <label>Username: </label>
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
                 </div>
                 <div>
                     <label>Password: </label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <button type="submit">Login</button>
-                {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
+                {errorMessage && <div style={{color: 'red'}}>{errorMessage}</div>}
             </form>
+            <p style={{ color: 'blue'}}> Don't have an account? <Link to="/register">Register</Link></p>
         </div>
     );
 };
