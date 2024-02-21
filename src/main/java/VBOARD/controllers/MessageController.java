@@ -32,7 +32,7 @@ public class MessageController {
 
     // Add a reply
     @PostMapping("/reply")
-    public ResponseEntity<?> addReply(@RequestParam("parentId") int parentId, @RequestBody Message reply) {
+    public ResponseEntity<?> addReply(@RequestParam("parentId") long parentId, @RequestBody Message reply) {
         String subject = reply.getSubject();
         Message newReply = messageService.addReply(parentId, reply.getAuthor(), subject, reply.getBody());
         if (newReply == null) {
