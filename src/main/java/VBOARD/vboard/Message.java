@@ -5,66 +5,54 @@
 
 package VBOARD.vboard;
 
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a message in a message board system. This class serves as a base for both topic posts and replies.
  */
-public class Message {
-	@Getter
+@Entity
+@Getter
+@Setter
+@Table(name = "messages")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "message_type", discriminatorType = DiscriminatorType.STRING)
+@NoArgsConstructor(force = true)
+public abstract class Message {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
 	private final String author;
-	@Getter
 	private final String subject;
-	@Getter
+
+	@Column(nullable = false)
 	private final String body;
-	@Getter
-	private final int id;
-	@Getter
-	@Setter
+
+	@CreationTimestamp
 	private LocalDateTime timestamp;
-	private ArrayList<Message> childList;
 
-	public Message(String author, String subject, String body, int id) {
-		this.author = author;
-		this.subject = subject;
-		this.body = body;
-		this.id = id;
-		childList = new ArrayList<>();
-		this.timestamp = LocalDateTime.now();
-	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "parent_id")
+	private Message parentMessage;
 
-	public void print(int indentation) {
-		if (author.isEmpty() && subject.isEmpty() && body.isEmpty()) {
-			throw new IllegalStateException("Message is empty.");
-		}
+	@OneToMany(mappedBy = "parentMessage", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Message> replies = new ArrayList<>();
 
-		StringBuilder indentString = new StringBuilder(" ".repeat(indentation * 2));
-		System.out.println(indentString + "Message #" + id + ": \"" + subject + "\"");
-		System.out.println(indentString + "From " + author + ":");
-		String[] bodyLines = body.split("\n");
-		for (String line : bodyLines) {
-			System.out.println(indentString + "    " + line);
-		}
-
-		if (!childList.isEmpty()) {
-			System.out.println(indentString + "  Replies:");
-			for (int i = 0; i < childList.size(); i++) {
-				childList.get(i).print(indentation + 2);
-
-				if (i < childList.size() - 1) {
-					System.out.println();
-				}
-			}
-		}
-	}
-
-	public void addChild(Message child){
-		childList.add(child);
-	}
+    public Message(String author, String subject, String body) {
+        this.author = author;
+        this.subject = subject;
+        this.body = body;
+    }
 
 	@Override
 	public String toString() {
@@ -74,9 +62,5 @@ public class Message {
 				", Body='" + body + '\'' +
 				", ID=" + id +
 				'}';
-	}
-
-	public ArrayList<Message> getChildren() {
-		return childList;
 	}
 }

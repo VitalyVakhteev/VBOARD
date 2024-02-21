@@ -5,13 +5,24 @@
 
 package VBOARD.vboard;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 
 /**
  * Represents a Topic in a message board. A Topic is a specific type of Message that
  * is not a reply to other messages.
  */
+@Entity
+@DiscriminatorValue("TOPIC")
 public class Topic extends Message {
+	/**
+	 * Default constructor for the Topic class.
+	 * It creates a new Topic with empty author, subject, and body.
+	 * This constructor is typically used when the specific details of the Topic are not yet available.
+	 */
+	public Topic() {
+		super("", "", "");
+	}
 
 	/**
 	 * Constructs a new Topic with specified author, subject, body, and id.
@@ -19,13 +30,16 @@ public class Topic extends Message {
 	 * @param author  The author of the topic.
 	 * @param subject The subject of the topic.
 	 * @param body    The body of the topic.
-	 * @param id      The unique identifier of the topic.
 	 */
-	public Topic(String author, String subject, String body, int id, LocalDateTime timestamp) {
-		super(author, subject, body, id);
-		setTimestamp(timestamp);
+	public Topic(String author, String subject, String body) {
+		super(author, subject, body);
 	}
 
+	/**
+	 * Overrides the toString method for the Topic class.
+	 *
+	 * @return A string representation of the Topic object, including the author, subject, body, and ID.
+	 */
 	@Override
 	public String toString() {
 		return "Topic{" +

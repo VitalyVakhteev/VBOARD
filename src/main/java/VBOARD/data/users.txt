@@ -5,4 +5,3 @@ mike $2a$12$oHQppzObnHERQEjbnzcV9.0WVMvppjxCuEOgbE7Dqm14uJtjZ16.u
 jenny $2a$12$23By41iikAqYW/NEJRmrZO40kUDGr6h1SwMBMkX2sX2YSZ.btXV/S
 vitalyv $2a$12$OtZqnZvccgw3x1fAXrq/xOwjJm/KRQvwLJDhQiP3x1aHp6Die0oBm
 testuser123 $2a$12$VGFqrRT09uy.FSjk1VSypeJXquLhhMGyYHOwttfrv4uiZ0D15.No2
-testregister $2a$10$XescjeOW5CQtQRN1tKBbOODKnRp7nqZiVVvCiBJkmehgUKMm3qrj2
