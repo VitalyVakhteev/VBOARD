@@ -13,7 +13,7 @@ import jakarta.persistence.Entity;
  * is not a reply to other messages.
  */
 @Entity
-@DiscriminatorValue("TOPIC")
+@DiscriminatorValue("Topic")
 public class Topic extends Message {
 	/**
 	 * Default constructor for the Topic class.

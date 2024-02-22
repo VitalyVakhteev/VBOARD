@@ -5,13 +5,15 @@
 
 package VBOARD.vboard;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-
-import org.hibernate.annotations.CreationTimestamp;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +28,12 @@ import java.util.List;
 @Table(name = "messages")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "message_type", discriminatorType = DiscriminatorType.STRING)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = Topic.class, name = "topic"),
+		@JsonSubTypes.Type(value = Reply.class, name = "reply")
+})
 @NoArgsConstructor(force = true)
 public abstract class Message {
 	@Id

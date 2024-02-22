@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * that is a response to other messages.
  */
 @Entity
-@DiscriminatorValue("REPLY")
+@DiscriminatorValue("Reply")
 public class Reply extends Message {
 	/**
 	 * Default constructor for the Reply class.

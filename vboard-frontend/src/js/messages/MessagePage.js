@@ -104,11 +104,13 @@ const MessagePage = ({ setIsLoggedIn }) => {
     const [messages, setMessages] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [replyModalOpen, setReplyModalOpen] = useState(false);
-    const [newReply, setNewReply] = useState({ body: '' });
     const [replyingToId, setReplyingToId] = useState(null);
     const toggleModal = () => setModalOpen(!modalOpen);
     const [newTopic, setNewTopic] = useState({
         subject: '',
+        body: ''
+    });
+    const [newReply, setNewReply] = useState({
         body: ''
     });
 
@@ -145,9 +147,10 @@ const MessagePage = ({ setIsLoggedIn }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const author = localStorage.getItem('currentUsername');
-        const topicToSubmit = { ...newTopic, author };
+        const topicToSubmit = { ...newTopic, author, type: 'topic' };
 
         try {
+            console.log("Submitting topic:", topicToSubmit)
             await axios.post('http://localhost:8080/api/messages/topic', topicToSubmit);
             setNewTopic({ subject: '', body: '' });
             toggleModal();
@@ -160,9 +163,10 @@ const MessagePage = ({ setIsLoggedIn }) => {
     const handleReplySubmit = async (e, parentId) => {
         e.preventDefault();
         const author = localStorage.getItem('currentUsername');
-        const replyToSubmit = { ...newReply, author, parentId };
+        const replyToSubmit = { ...newReply, author, parentId, type: 'reply' };
 
         try {
+            console.log("Submitting reply:", replyToSubmit);
             await axios.post(`http://localhost:8080/api/messages/reply?parentId=${parentId}`, replyToSubmit);
             setNewReply({ body: '' });
             setReplyModalOpen(false);

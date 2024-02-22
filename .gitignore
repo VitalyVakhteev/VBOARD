@@ -2,8 +2,6 @@
 VBOARD.iml
 target
 
-src/main/java/VBOARD/data/users.txt
-
 vboard-frontend/.idea
 vboard-frontend/node_modules
 vboard-frontend/.pnp

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageService {
@@ -21,6 +22,19 @@ public class MessageService {
      */
     public List<Message> getAllMessages() {
         return messageRepository.findAll();
+    }
+
+    /**
+     * This method retrieves all top-level messages from the message repository.
+     * A top-level message is defined as a message that does not have a parent message.
+     * This is typically used to fetch all the main topics in a discussion board.
+     *
+     * @return A list of all top-level messages.
+     */
+    public List<Message> getAllTopLevelMessages() {
+        return messageRepository.findAll().stream()
+                .filter(message -> message.getParentMessage() == null)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -39,16 +53,18 @@ public class MessageService {
      * Add a reply to an existing message.
      * @param parentId The ID of the message to reply to.
      * @param author The author of the reply.
-     * @param subject The subject of the reply. If null or empty, default to "Re: parent's subject".
      * @param body The body of the reply.
      * @return The added reply, or null if the parent message does not exist.
      */
-    public Message addReply(long parentId, String author, String subject, String body) {
-        Optional<Message> parent = messageRepository.findById(parentId);
-        if (parent.isPresent()) {
-            Reply reply = new Reply(author, subject.isEmpty() ? "Re: " + parent.get().getSubject() : subject, body);
-            reply.setParentMessage(parent.get());
-            return messageRepository.save(reply);
+    public Message addReply(long parentId, String author, String body) {
+        Optional<Message> parentOpt = messageRepository.findById(parentId);
+        if (parentOpt.isPresent()) {
+            Message parent = parentOpt.get();
+            if (parent instanceof Topic) {
+                Reply reply = new Reply(author, "Re: " + parent.getSubject(), body);
+                reply.setParentMessage(parent);
+                return messageRepository.save(reply);
+            }
         }
         return null;
     }
