@@ -23,6 +23,7 @@ Requires:
 - NPM
 - Maven
 - All dependencies under pom.xml
+
 Use Maven for dependencies.
 Make sure to run the Postgres DB through `docker-compose.yml`, with `docker-compose up -d`.
 If you don't have data immediately initialized, use the .sql file in the `psql` folder under `src/main/java/VBOARD/`
