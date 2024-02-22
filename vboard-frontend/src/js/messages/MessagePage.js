@@ -2,7 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MessageComponent from './MessageComponent';
 
-const TopicModal = ({ isOpen, onClose, onSubmit, topic, onInputChange }) => {
+const TopicModal = ({ isOpen, onClose, onSubmit, topic, onInputChange, setSelectedFile }) => {
+
+    const handleFileChange = (e) => {
+        if (e.target.files[0]) {
+            setSelectedFile(e.target.files[0]);
+        }
+    };
+
     if (!isOpen) return null;
 
     const inputStyle = {
@@ -16,7 +23,12 @@ const TopicModal = ({ isOpen, onClose, onSubmit, topic, onInputChange }) => {
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center" }}>
             <div style={{ backgroundColor: "white", padding: 20, borderRadius: 5, width: '500px' }}>
                 <h2>Add New Topic</h2>
-                <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <form onSubmit={onSubmit} style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+                    <input
+                        type="file"
+                        onChange={handleFileChange}
+                        style={{marginBottom: '10px'}}
+                    />
                     <input
                         type="text"
                         name="subject"
@@ -32,11 +44,11 @@ const TopicModal = ({ isOpen, onClose, onSubmit, topic, onInputChange }) => {
                         onChange={onInputChange}
                         placeholder="Body"
                         required
-                        style={{ ...inputStyle, height: '100px' }}
+                        style={{...inputStyle, height: '100px'}}
                     />
-                    <div style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}>
-                        <button type="submit" style={{ display: 'inline-block' }}>Submit</button>
-                        <button type="button" onClick={onClose} style={{ display: 'inline-block' }}>Cancel</button>
+                    <div style={{display: 'flex', justifyContent: 'flex-start', gap: '10px'}}>
+                        <button type="submit" style={{display: 'inline-block'}}>Submit</button>
+                        <button type="button" onClick={onClose} style={{display: 'inline-block'}}>Cancel</button>
                     </div>
                 </form>
             </div>
@@ -44,7 +56,13 @@ const TopicModal = ({ isOpen, onClose, onSubmit, topic, onInputChange }) => {
     );
 };
 
-const ReplyModal = ({ isOpen, onClose, onSubmit, reply, onInputChange, parentId }) => {
+const ReplyModal = ({isOpen, onClose, onSubmit, reply, onInputChange, parentId, setSelectedFile }) => {
+    const handleFileChange = (e) => {
+        if (e.target.files[0]) {
+            setSelectedFile(e.target.files[0]);
+        }
+    };
+
     if (!isOpen) return null;
 
     const inputStyle = {
@@ -58,18 +76,24 @@ const ReplyModal = ({ isOpen, onClose, onSubmit, reply, onInputChange, parentId 
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center" }}>
             <div style={{ backgroundColor: "white", padding: 20, borderRadius: 5, width: '500px' }}>
                 <h2>Add New Reply</h2>
-                <form onSubmit={(e) => onSubmit(e, parentId)} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <form onSubmit={(e) => onSubmit(e, parentId)}
+                      style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+                    <input
+                        type="file"
+                        onChange={handleFileChange}
+                        style={{marginBottom: '10px'}}
+                    />
                     <textarea
                         name="body"
                         value={reply.body}
                         onChange={onInputChange}
                         placeholder="Reply"
                         required
-                        style={{ ...inputStyle, height: '100px' }}
+                        style={{...inputStyle, height: '100px'}}
                     />
-                    <div style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}>
-                        <button type="submit" style={{ display: 'inline-block' }}>Submit</button>
-                        <button type="button" onClick={onClose} style={{ display: 'inline-block' }}>Cancel</button>
+                    <div style={{display: 'flex', justifyContent: 'flex-start', gap: '10px'}}>
+                        <button type="submit" style={{display: 'inline-block'}}>Submit</button>
+                        <button type="button" onClick={onClose} style={{display: 'inline-block'}}>Cancel</button>
                     </div>
                 </form>
             </div>
@@ -105,6 +129,8 @@ const MessagePage = ({ setIsLoggedIn }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [replyModalOpen, setReplyModalOpen] = useState(false);
     const [replyingToId, setReplyingToId] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const REACT_APP_IMGUR_CLIENT_ID = process.env.REACT_APP_IMGUR_CLIENT_ID;
     const toggleModal = () => setModalOpen(!modalOpen);
     const [newTopic, setNewTopic] = useState({
         subject: '',
@@ -122,6 +148,25 @@ const MessagePage = ({ setIsLoggedIn }) => {
     useEffect(() => {
         fetchMessages();
     }, []);
+
+    const uploadImageToImgur = async (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const response = await axios.post('https://api.imgur.com/3/image', formData, {
+                headers: {
+                    'Authorization': ('Client-ID ' + REACT_APP_IMGUR_CLIENT_ID),
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            return response.data.data.link;
+        } catch (error) {
+            console.error('Failed to upload image to Imgur:', error);
+            return '';
+        }
+    };
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -146,8 +191,13 @@ const MessagePage = ({ setIsLoggedIn }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        let imageUrl = '';
+        if (selectedFile) {
+            imageUrl = await uploadImageToImgur(selectedFile);
+            setSelectedFile(null);
+        }
         const author = localStorage.getItem('currentUsername');
-        const topicToSubmit = { ...newTopic, author, type: 'topic' };
+        const topicToSubmit = { ...newTopic, author, imageUrl, type: 'topic' };
 
         try {
             await axios.post('http://localhost:8080/api/messages/topic', topicToSubmit);
@@ -161,8 +211,13 @@ const MessagePage = ({ setIsLoggedIn }) => {
 
     const handleReplySubmit = async (e, parentId) => {
         e.preventDefault();
+        let imageUrl = '';
+        if (selectedFile) {
+            imageUrl = await uploadImageToImgur(selectedFile);
+            setSelectedFile(null);
+        }
         const author = localStorage.getItem('currentUsername');
-        const replyToSubmit = { ...newReply, author, parentId, type: 'reply' };
+        const replyToSubmit = { ...newReply, author, parentId, imageUrl, type: 'reply' };
 
         try {
             await axios.post(`http://localhost:8080/api/messages/reply?parentId=${parentId}`, replyToSubmit);
@@ -190,10 +245,9 @@ const MessagePage = ({ setIsLoggedIn }) => {
                 </div>
             </div>
             <TopicModal isOpen={modalOpen} onClose={toggleModal} onSubmit={handleSubmit} topic={newTopic}
-                        onInputChange={handleInputChange}/>
+                            onInputChange={handleInputChange} setSelectedFile={setSelectedFile}/>
             <ReplyModal isOpen={replyModalOpen} onClose={() => setReplyModalOpen(false)} onSubmit={handleReplySubmit}
-                        reply={newReply}
-                        onInputChange={handleReplyInputChange} parentId={replyingToId}/>
+                        reply={newReply} onInputChange={handleReplyInputChange} parentId={replyingToId} setSelectedFile={setSelectedFile}/>
             {messages.map((message) => (
                 <div key={message.id}>
                     <MessageComponent message={message}/>

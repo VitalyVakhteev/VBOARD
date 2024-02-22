@@ -28,8 +28,7 @@ public class MessageController {
     // Add a new topic
     @PostMapping("/topic")
     public ResponseEntity<Message> addTopic(@RequestBody Topic topic) {
-        System.out.println("Received topic: \n" + topic);
-        Message newTopic = messageService.addTopic(topic.getAuthor(), topic.getSubject(), topic.getBody());
+        Message newTopic = messageService.addTopic(topic.getAuthor(), topic.getSubject(), topic.getBody(), topic.getImageUrl());
         return ResponseEntity.status(HttpStatus.CREATED).body(newTopic);
     }
 
@@ -37,7 +36,7 @@ public class MessageController {
     @PostMapping("/reply")
     public ResponseEntity<?> addReply(@RequestParam("parentId") long parentId, @RequestBody Reply reply) {
         String subject = reply.getSubject();
-        Message newReply = messageService.addReply(parentId, reply.getAuthor(), reply.getBody());
+        Message newReply = messageService.addReply(parentId, reply.getAuthor(), reply.getBody(), reply.getImageUrl());
         if (newReply == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Parent message not found");
         }

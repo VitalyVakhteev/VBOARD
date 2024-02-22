@@ -19,6 +19,7 @@ public class UserController {
 
     // Login
     @PostMapping("/login")
+    @CrossOrigin
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
         boolean isAuthenticated = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
         if (isAuthenticated) {

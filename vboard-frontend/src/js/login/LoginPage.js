@@ -31,21 +31,36 @@ const LoginPage = ({ setIsLoggedIn }) => {
     };
 
     return (
-        <div>
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            minHeight: "100vh"
+        }}>
             <h2>Login</h2>
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label>Username: </label>
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
+            <form onSubmit={handleLogin} style={{
+                width: "100%",
+                maxWidth: "300px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+            }}>
+                <div style={{marginBottom: "20px", width: "100%"}}>
+                    <label style={{display: "block", marginBottom: "5px"}}>Username: </label>
+                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}
+                           style={{width: "100%", padding: "8px"}}/>
                 </div>
-                <div>
-                    <label>Password: </label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                <div style={{marginBottom: "20px", width: "100%"}}>
+                    <label style={{display: "block", marginBottom: "5px"}}>Password: </label>
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+                           style={{width: "100%", padding: "8px"}}/>
                 </div>
-                <button type="submit">Login</button>
-                {errorMessage && <div style={{color: 'red'}}>{errorMessage}</div>}
+                <button type="submit" style={{padding: "8px 20px", cursor: "pointer"}}>Login</button>
+                {errorMessage && <div style={{color: 'red', marginTop: "10px"}}>{errorMessage}</div>}
             </form>
-            <p style={{ color: 'blue'}}> Don't have an account? <Link to="/register">Register</Link></p>
+            <p style={{color: 'blue', marginTop: "20px"}}> Don't have an account? <Link to="/register">Register</Link>
+            </p>
         </div>
     );
 };

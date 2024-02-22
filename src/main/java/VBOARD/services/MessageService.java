@@ -38,14 +38,16 @@ public class MessageService {
     }
 
     /**
-     * Add a new topic to the message board.
+     * Add a new topic to the message board with an optional image.
      * @param author The author of the message.
      * @param subject The subject of the message.
      * @param body The body of the message.
+     * @param imageUrl The URL of the image. Can be null or empty if there's no image.
      * @return The added message.
      */
-    public Message addTopic(String author, String subject, String body) {
-        Message topic = new Topic(author, subject, body);
+    public Message addTopic(String author, String subject, String body, String imageUrl) {
+        Topic topic = new Topic(author, subject, body);
+        topic.setImageUrl(imageUrl);
         return messageRepository.save(topic);
     }
 
@@ -54,17 +56,17 @@ public class MessageService {
      * @param parentId The ID of the message to reply to.
      * @param author The author of the reply.
      * @param body The body of the reply.
+     * @param imageUrl The URL of the image. Can be null or empty if there's no image.
      * @return The added reply, or null if the parent message does not exist.
      */
-    public Message addReply(long parentId, String author, String body) {
+    public Message addReply(long parentId, String author, String body, String imageUrl) {
         Optional<Message> parentOpt = messageRepository.findById(parentId);
         if (parentOpt.isPresent()) {
             Message parent = parentOpt.get();
-            if (parent instanceof Topic) {
-                Reply reply = new Reply(author, "Re: " + parent.getSubject(), body);
-                reply.setParentMessage(parent);
-                return messageRepository.save(reply);
-            }
+            Reply reply = new Reply(author, "Re: " + parent.getSubject(), body);
+            reply.setParentMessage(parent);
+            reply.setImageUrl(imageUrl);
+            return messageRepository.save(reply);
         }
         return null;
     }

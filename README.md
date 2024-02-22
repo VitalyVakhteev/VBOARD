@@ -1,19 +1,20 @@
 # VBOARD
 A Java Spring Boot imageboard based on an assignment that I got too carried away with.
 
-## Version: 0.0.4
+## Version: 1.0.0
 Features:
 
+- Topic and Reply system with messages including:
+  - IDs
+  - Authors
+  - Timestamps
+  - Images
 - Registering users, logging in
-- Adding new topics
-- Replying to topics
-- Messages contain IDs, Author, Timestamp
 - Requests performed through Postgres
 
 Plans:
 
 - Add body scanning (to detect links, message mentions, etc.)
-- Images in messages
 - Moderation (also includes role management)
 - Pagination
 

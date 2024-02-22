@@ -1,4 +1,6 @@
 .idea
+vboard-frontend/.env
+.env
 VBOARD.iml
 target
 

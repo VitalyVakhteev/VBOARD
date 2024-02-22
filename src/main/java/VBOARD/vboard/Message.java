@@ -42,6 +42,7 @@ public abstract class Message {
 
 	private final String author;
 	private final String subject;
+	private String imageUrl;
 
 	@Column(nullable = false)
 	private final String body;
@@ -68,6 +69,7 @@ public abstract class Message {
 				"Author='" + author + '\'' +
 				", Subject='" + subject + '\'' +
 				", Body='" + body + '\'' +
+				", ImageUrl='" + imageUrl + '\'' +
 				", ID=" + id +
 				'}';
 	}
