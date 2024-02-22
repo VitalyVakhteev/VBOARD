@@ -1,54 +1,16 @@
 // Todo: Write full docs
 package VBOARD.services;
 
-import jakarta.annotation.PostConstruct;
+import VBOARD.repositories.UserRepository;
 import VBOARD.vboard.User;
-import org.springframework.beans.factory.annotation.Value;
+import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
 
 @Service
 public class UserService {
-    private final List<User> users = new ArrayList<>();
-    private final Path usersFilePath;
-
-    public UserService(@Value("${vboard.userfile.path}") String usersFilePath) {
-        this.usersFilePath = Paths.get(usersFilePath.replace("file:", ""));
-    }
-
-    @PostConstruct
-    public void init() {
-        try {
-            loadUsers();
-        } catch (IOException e) {
-            System.err.println("Error: Unable to load users - " + e.getMessage());
-        }
-    }
-
-    private void loadUsers() throws IOException {
-        if (!Files.exists(usersFilePath))
-            return;
-        try {
-            List<String> lines = Files.readAllLines(usersFilePath);
-            lines.forEach(line -> {
-                String[] credentials = line.split(" ", 2);
-                if (credentials.length == 2) {
-                    users.add(new User(credentials[0], credentials[1], true));
-                }
-            });
-        } catch (IOException e) {
-            System.err.println("Error: Unable to load users - " + e.getMessage());
-        }
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Authenticate a user with the provided username and password.
@@ -58,11 +20,8 @@ public class UserService {
      * @return true if authentication is successful, false otherwise.
      */
     public boolean authenticate(String username, String password) {
-        Optional<User> foundUser = users.stream()
-                .filter(user -> user.getUsername().equals(username))
-                .findFirst();
-
-        return foundUser.isPresent() && foundUser.get().check(username, password);
+        User user = userRepository.findByUsername(username);
+        return user != null && BCrypt.checkpw(password, user.getHashedPwd());
     }
 
     /**
@@ -72,19 +31,13 @@ public class UserService {
      * @param password The password of the new user.
      * @return true if the user is added successfully, false if the user already exists.
      */
-    public boolean addUser(String username, String password) throws IOException {
-        if(users.stream().anyMatch(user -> user.getUsername().equals(username))) {
-            return false; // User already exists
+    public boolean addUser(String username, String password) {
+        if (userRepository.findByUsername(username) != null) {
+            return false;   // User already exists
         }
-        users.add(new User(username, password, false));
-        saveUsers();
+        User newUser = new User(username, password, false);
+        userRepository.save(newUser);
         return true;
-    }
-
-    private void saveUsers() throws IOException {
-        List<String> lines = new ArrayList<>();
-        users.forEach(user -> lines.add(user.getUsername() + " " + user.getHashedPwd()));
-        Files.write(usersFilePath, lines);
     }
 
     /**
@@ -95,17 +48,12 @@ public class UserService {
      * @param newPassword The new password to set.
      * @return true if the password was changed successfully, false otherwise.
      */
-    public boolean changePassword(String username, String oldPassword, String newPassword) throws IOException {
-        Optional<User> foundUser = users.stream()
-                .filter(user -> user.getUsername().equals(username))
-                .findFirst();
-
-        if (foundUser.isPresent() && foundUser.get().check(username, oldPassword)) {
-            boolean passwordChanged = foundUser.get().setPassword(oldPassword, newPassword);
-            if (passwordChanged) {
-                saveUsers();
-                return true;
-            }
+    public boolean changePassword(String username, String oldPassword, String newPassword) {
+        User user = userRepository.findByUsername(username);
+        if (user != null && BCrypt.checkpw(oldPassword, user.getHashedPwd())) {
+            user.setHashedPwd(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+            userRepository.save(user);
+            return true;
         }
         return false;
     }

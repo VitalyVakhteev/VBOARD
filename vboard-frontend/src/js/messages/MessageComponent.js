@@ -15,8 +15,8 @@ const MessageComponent = ({ message, level = 0 }) => {
             <p style={{ fontWeight: 'bold' }}>{message.author} | #{message.id} | {formattedTimestamp}</p>
             <h4>{message.subject}</h4>
             <p>{message.body}</p>
-            {message.childList && message.childList.map(child =>
-                <MessageComponent key={child.id} message={child} level={level + 1} />
+            {message.replies && message.replies.map(reply =>
+                <MessageComponent key={reply.id} message={reply} level={level + 1} />
             )}
         </div>
     );

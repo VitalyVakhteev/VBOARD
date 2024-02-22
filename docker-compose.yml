@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: vboard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin # Adjust as needed
+    ports:
+      - "8432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./src/main/java/VBOARD/pgsql/:/docker-entrypoint-initdb.d/
+volumes:
+  postgres-data:
