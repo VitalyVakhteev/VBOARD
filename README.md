@@ -8,7 +8,7 @@ If you don't have data immediately initialized, use the .sql file in the `psql` 
 
 Run API by running `src/main/java/VBOARD/VboardApplication.java`
 
-Run Frontend Server by running `vboard-frontend/...`
+Run Frontend Server by running npm start with your current working directory as `vboard-frontend/...`
 
 ## Version: 0.0.4
 Features:
