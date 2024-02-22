@@ -7,11 +7,12 @@ const LoginPage = ({ setIsLoggedIn }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const REACT_APP_API_HOST = process.env.REACT_APP_API_HOST;
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/api/users/login', { username, password });
+            const response = await axios.post(REACT_APP_API_HOST + '/api/users/login', { username, password });
             if (response.data === "User authenticated") {
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('currentUsername', username);

@@ -125,12 +125,13 @@ const preprocessMessages = (messages) => {
 };
 
 const MessagePage = ({ setIsLoggedIn }) => {
+    const REACT_APP_IMGUR_CLIENT_ID = process.env.REACT_APP_IMGUR_CLIENT_ID;
+    const REACT_APP_API_HOST = process.env.REACT_APP_API_HOST;
     const [messages, setMessages] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [replyModalOpen, setReplyModalOpen] = useState(false);
     const [replyingToId, setReplyingToId] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
-    const REACT_APP_IMGUR_CLIENT_ID = process.env.REACT_APP_IMGUR_CLIENT_ID;
     const toggleModal = () => setModalOpen(!modalOpen);
     const [newTopic, setNewTopic] = useState({
         subject: '',
@@ -141,13 +142,13 @@ const MessagePage = ({ setIsLoggedIn }) => {
     });
 
     const fetchMessages = async () => {
-        const response = await axios.get('http://localhost:8080/api/messages');
+        const response = await axios.get(REACT_APP_API_HOST + '/api/messages');
         const preprocessedMessages = preprocessMessages(response.data);
         setMessages(preprocessedMessages);
     };
     useEffect(() => {
         fetchMessages();
-    }, []);
+    }, [fetchMessages]);
 
     const uploadImageToImgur = async (file) => {
         const formData = new FormData();
@@ -200,7 +201,7 @@ const MessagePage = ({ setIsLoggedIn }) => {
         const topicToSubmit = { ...newTopic, author, imageUrl, type: 'topic' };
 
         try {
-            await axios.post('http://localhost:8080/api/messages/topic', topicToSubmit);
+            await axios.post(REACT_APP_API_HOST + '/api/messages/topic', topicToSubmit);
             setNewTopic({ subject: '', body: '' });
             toggleModal();
             fetchMessages();
@@ -220,7 +221,7 @@ const MessagePage = ({ setIsLoggedIn }) => {
         const replyToSubmit = { ...newReply, author, parentId, imageUrl, type: 'reply' };
 
         try {
-            await axios.post(`http://localhost:8080/api/messages/reply?parentId=${parentId}`, replyToSubmit);
+            await axios.post(REACT_APP_API_HOST + `/api/messages/reply?parentId=${parentId}`, replyToSubmit);
             setNewReply({ body: '' });
             setReplyModalOpen(false);
             fetchMessages();

@@ -1,15 +1,26 @@
 version: '3.8'
 services:
-  postgres:
+  vboard-app:
+    image: vboard:latest
+    environment:
+      IMGUR_CLIENT_ID: ebe6b4dfec2596a
+      SPRING_DATASOURCE_URL: jdbc:postgresql://vboard-db:5432/vboard
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      - vboard-db
+  vboard-db:
     image: postgres:latest
     environment:
       POSTGRES_DB: vboard
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin # Adjust as needed
+      POSTGRES_PASSWORD: vboard_postgres # Adjust as needed
     ports:
-      - "8432:5432"
+      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./src/main/java/VBOARD/pgsql/:/docker-entrypoint-initdb.d/
+      - ./initdb:/docker-entrypoint-initdb.d/
 volumes:
   postgres-data:

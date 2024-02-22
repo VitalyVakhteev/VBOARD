@@ -1,8 +1,3 @@
-/*
- *	Author: Vitaly Vakhteev
- *  Date: 01/22/24
- */
-
 package VBOARD.vboard;
 
 import jakarta.persistence.DiscriminatorValue;

@@ -1,9 +1,10 @@
 .idea
-vboard-frontend/.env
 .env
 VBOARD.iml
 target
+vboard.tar
 
+vboard-frontend/.env
 vboard-frontend/.idea
 vboard-frontend/node_modules
 vboard-frontend/.pnp

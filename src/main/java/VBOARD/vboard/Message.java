@@ -1,8 +1,3 @@
-/*
- *	Author: Vitaly Vakhteev
- *  Date: 01/22/24
- */
-
 package VBOARD.vboard;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -20,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a message in a message board system. This class serves as a base for both topic posts and replies.
+ * Represents a message. This class serves as a base for both topic posts and replies.
  */
 @Entity
 @Getter
@@ -40,29 +35,48 @@ public abstract class Message {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	// The author of the message
 	private final String author;
+	// The subject of the message
 	private final String subject;
+	// The URL of the image associated with the message
 	private String imageUrl;
 
+	// The body of the message
 	@Column(nullable = false)
 	private final String body;
 
+	// The timestamp of when the message was created
 	@CreationTimestamp
 	private LocalDateTime timestamp;
 
+	// The parent message of this message, if it is a reply
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
 	private Message parentMessage;
 
+	// The replies to this message, if it is a topic
 	@OneToMany(mappedBy = "parentMessage", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Message> replies = new ArrayList<>();
 
-    public Message(String author, String subject, String body) {
-        this.author = author;
-        this.subject = subject;
-        this.body = body;
-    }
+	/**
+	 * Constructor for Message.
+	 *
+	 * @param author The author of the message.
+	 * @param subject The subject of the message.
+	 * @param body The body of the message.
+	 */
+	public Message(String author, String subject, String body) {
+		this.author = author;
+		this.subject = subject;
+		this.body = body;
+	}
 
+	/**
+	 * Returns a string representation of the Message object.
+	 *
+	 * @return A string representation of the Message object.
+	 */
 	@Override
 	public String toString() {
 		return "Message{" +

@@ -8,6 +8,7 @@ const RegistrationPage = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const REACT_APP_API_HOST = process.env.REACT_APP_API_HOST;
 
     const handleRegistration = async (e) => {
         e.preventDefault();
@@ -16,7 +17,7 @@ const RegistrationPage = () => {
             return;
         }
         try {
-            const response = await axios.post('http://localhost:8080/api/users/register', { username, password, confirmPassword });
+            const response = await axios.post(REACT_APP_API_HOST + '/api/users/register', { username, password, confirmPassword });
             alert(response.data);
             navigate('/login');
         } catch (error) {

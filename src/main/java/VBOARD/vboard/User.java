@@ -1,8 +1,3 @@
-/*
- *	Author: Vitaly Vakhteev
- *  Date: 01/22/24
- */
-
 package VBOARD.vboard;
 
 import lombok.Getter;
@@ -24,21 +19,12 @@ import jakarta.persistence.*;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	/*
-	 * The unique ID of the user.
-	 */
 	private Long id;
 
 	@Column(unique = true, nullable = false)
-	/*
-	 * The unique username of the user.
-	 */
 	private String username;
 
 	@Column(name = "hashed_pwd", nullable = false)
-	/*
-	 * The hashed password of the user.
-	 */
 	private String hashedPwd;
 
 	/**

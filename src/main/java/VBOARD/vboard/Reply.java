@@ -1,14 +1,7 @@
-/*
- *	Author: Vitaly Vakhteev
- *  Date: 01/22/24
- */
-
 package VBOARD.vboard;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-
-import java.time.LocalDateTime;
 
 /**
  * Represents a Reply in a message board. A Reply is a specific type of Message
