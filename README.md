@@ -1,26 +1,27 @@
 # VBOARD
-A Java Springboot web app based on an assignment that I got too carried away with.
+A Java Spring Boot image based on an assignment that I got too carried away with.
 
 Use Maven for dependencies.
+
+Make sure to run the Postgres server through `docker-compose.yml`.
+If you don't have data immediately initialized, use the .sql file in the `psql` folder under `src/main/java/VBOARD/` 
 
 Run API by running `src/main/java/VBOARD/VboardApplication.java`
 
 Run Frontend Server by running `vboard-frontend/...`
 
-You can add your own users or data by modifying/adding `data.json` and `users.txt` under `src/main/resources/`.
-- **NOTE:** If you are getting issues with the hash in `users.txt` and an invalid salt revision, make sure the third letter for each hash is an "a".
-## Version: 0.0.3
+## Version: 0.0.4
 Features:
 
 - Registering users, logging in
 - Adding new topics
 - Replying to topics
 - Messages contain IDs, Author, Timestamp
+- Requests performed through Postgres
 
 Plans:
 
 - Add body scanning (to detect links, message mentions, etc.)
 - Images in messages
-- Moderation
+- Moderation (also includes role management)
 - Pagination
-- Rework data storage to MySQL
