@@ -4,11 +4,12 @@ A Java Spring Boot image based on an assignment that I got too carried away with
 Use Maven for dependencies.
 
 Make sure to run the Postgres server through `docker-compose.yml`.
-If you don't have data immediately initialized, use the .sql file in the `psql` folder under `src/main/java/VBOARD/` 
+If you don't have data immediately initialized, use the .sql file in the `psql` folder under `src/main/java/VBOARD/`
+Then run the appropriate command referencing that .sql file using `psql` in your terminal of choice.
 
 Run API by running `src/main/java/VBOARD/VboardApplication.java`
 
-Run Frontend Server by running npm start with your current working directory as `vboard-frontend/...`
+Run Frontend Server by running `npm start` with your current working directory as `vboard-frontend/...`
 
 ## Version: 0.0.4
 Features:
