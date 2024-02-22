@@ -150,7 +150,6 @@ const MessagePage = ({ setIsLoggedIn }) => {
         const topicToSubmit = { ...newTopic, author, type: 'topic' };
 
         try {
-            console.log("Submitting topic:", topicToSubmit)
             await axios.post('http://localhost:8080/api/messages/topic', topicToSubmit);
             setNewTopic({ subject: '', body: '' });
             toggleModal();
@@ -166,7 +165,6 @@ const MessagePage = ({ setIsLoggedIn }) => {
         const replyToSubmit = { ...newReply, author, parentId, type: 'reply' };
 
         try {
-            console.log("Submitting reply:", replyToSubmit);
             await axios.post(`http://localhost:8080/api/messages/reply?parentId=${parentId}`, replyToSubmit);
             setNewReply({ body: '' });
             setReplyModalOpen(false);
