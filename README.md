@@ -1,5 +1,5 @@
 # VBOARD
-A Java Spring Boot imageboard based on an assignment that I got too carried away with.
+An open-source Java Spring Boot imageboard.
 
 ## Version: 1.0.1
 Features:
