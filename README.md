@@ -1,7 +1,7 @@
 # VBOARD
 An open-source Java Spring Boot imageboard.
 
-## Version: 1.0.2
+## Version: 1.0.3
 Features:
 
 - Topic and Reply system with messages including:
@@ -11,10 +11,11 @@ Features:
   - Images
 - Registering users, logging in
 - Requests performed through Postgres
+- Ability to add links with <a> html tag
+- Reference other messages with #{id} in body
 
 Plans:
 
-- Add body scanning (to detect message mentions, etc.)
 - Moderation (also includes role management)
 - Pagination
 
