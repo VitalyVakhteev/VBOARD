@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState, Fragment} from 'react';
 import DOMPurify from 'dompurify';
 
 const MessageComponent = ({ message, level = 0 }) => {
@@ -30,12 +30,50 @@ const MessageComponent = ({ message, level = 0 }) => {
         flexDirection: 'column',
         textAlign: 'left',
     };
+    const handleMessageLinkClick = (id, event) => {
+        event.preventDefault();
+        const element = document.getElementById(`message-${id}`);
+        if (element) {
+            const topPosition = element.offsetTop;
+            window.scrollTo({
+                top: topPosition,
+                behavior: 'smooth',
+            });
+        }
+    };
+
+    const parseMessageBody = (body) => {
+        const cleanBody = DOMPurify.sanitize(body, {
+            ALLOWED_TAGS: ['span', 'a', 'b', 'i', 'em', 'strong'],
+            ALLOWED_ATTR: ['href', 'style', 'data-id', 'rel', 'target'],
+        });
+
+        const parts = cleanBody.split(/(#\d+)/g);
+        return parts.map((part, index) => {
+            if (part.match(/#\d+/)) {
+                const id = part.substring(1);
+                return (
+                    <span key={index} style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
+                          onClick={(e) => handleMessageLinkClick(id, e)}>
+                        {part}
+                    </span>
+                );
+            }
+            if (part.includes('<a')) {
+                const sanitizedPart = DOMPurify.sanitize(part, {
+                    ADD_ATTR: ['target', 'rel'],
+                });
+                return <span key={index} dangerouslySetInnerHTML={{ __html: sanitizedPart }} />;
+            }
+            return <Fragment key={index}>{DOMPurify.sanitize(part)}</Fragment>;
+        });
+    };
 
     const toggleImageSize = () => setIsImageClicked(!isImageClicked);
-    const sanitizedBody = DOMPurify.sanitize(message.body, {ALLOWED_TAGS: ['a']});
+    const messageBodyElements = parseMessageBody(message.body);
 
     return (
-        <div style={messageStyle}>
+        <div style={messageStyle} id={`message-${message.id}`}>
             <div style={contentStyle}>
                 {message.imageUrl && (
                     <img
@@ -48,7 +86,7 @@ const MessageComponent = ({ message, level = 0 }) => {
                 <div style={textStyle}>
                     <p style={{ fontWeight: 'bold' }}>{message.author} | #{message.id} | {new Date(message.timestamp).toLocaleString()}</p>
                     <h4>{message.subject}</h4>
-                    <p dangerouslySetInnerHTML={{__html: sanitizedBody}}></p>
+                    <p>{messageBodyElements}</p>
                 </div>
             </div>
             {message.replies && message.replies.map(reply => (
