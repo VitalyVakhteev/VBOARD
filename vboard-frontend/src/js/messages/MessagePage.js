@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import MessageComponent from './MessageComponent';
 
@@ -141,11 +141,11 @@ const MessagePage = ({ setIsLoggedIn }) => {
         body: ''
     });
 
-    const fetchMessages = async () => {
+    const fetchMessages = useCallback(async () => {
         const response = await axios.get(REACT_APP_API_HOST + '/api/messages');
         const preprocessedMessages = preprocessMessages(response.data);
         setMessages(preprocessedMessages);
-    };
+    }, [REACT_APP_API_HOST]);
     useEffect(() => {
         fetchMessages();
     }, [fetchMessages]);
