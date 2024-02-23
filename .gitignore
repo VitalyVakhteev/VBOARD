@@ -9,6 +9,7 @@ vboard-frontend/.idea
 vboard-frontend/node_modules
 vboard-frontend/.pnp
 vboard-frontend/.pnp.js
+vboard-frontend/build.tar.gz
 
 # testing
 vboard-frontend/coverage

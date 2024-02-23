@@ -15,4 +15,4 @@ COPY ${JAR_FILE} VBOARD-1.0.1.jar
 #COPY .env .env
 
 # Run the application
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","VBOARD-1.0.0.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","VBOARD-1.0.1.jar"]

@@ -20,9 +20,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*") // Todo: Fix later to vboard.club
+                .allowedOrigins("https://vboard.club", "https://www.vboard.club")
                 .allowedMethods("GET", "POST", "PUT", "OPTIONS")
-                .allowedHeaders("Authorization", "Content-Type", "X-Requested-With", "XMLHttpRequest");
+                .allowedHeaders("Authorization", "Content-Type", "X-Requested-With", "XMLHttpRequest")
+                .maxAge(3600);
 //                .allowCredentials(true); // Todo: Credentials if moderation is to be added
     }
 }
