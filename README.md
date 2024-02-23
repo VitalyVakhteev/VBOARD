@@ -1,7 +1,7 @@
 # VBOARD
 A Java Spring Boot imageboard based on an assignment that I got too carried away with.
 
-## Version: 1.0.1
+## Version: 1.0.2
 Features:
 
 - Topic and Reply system with messages including:
@@ -14,7 +14,7 @@ Features:
 
 Plans:
 
-- Add body scanning (to detect links, message mentions, etc.)
+- Add body scanning (to detect message mentions, etc.)
 - Moderation (also includes role management)
 - Pagination
 

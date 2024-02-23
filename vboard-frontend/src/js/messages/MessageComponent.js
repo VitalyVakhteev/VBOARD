@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DOMPurify from 'dompurify';
 
 const MessageComponent = ({ message, level = 0 }) => {
     const [isImageClicked, setIsImageClicked] = useState(false);
@@ -31,6 +32,7 @@ const MessageComponent = ({ message, level = 0 }) => {
     };
 
     const toggleImageSize = () => setIsImageClicked(!isImageClicked);
+    const sanitizedBody = DOMPurify.sanitize(message.body, {ALLOWED_TAGS: ['a']});
 
     return (
         <div style={messageStyle}>
@@ -46,7 +48,7 @@ const MessageComponent = ({ message, level = 0 }) => {
                 <div style={textStyle}>
                     <p style={{ fontWeight: 'bold' }}>{message.author} | #{message.id} | {new Date(message.timestamp).toLocaleString()}</p>
                     <h4>{message.subject}</h4>
-                    <p>{message.body}</p>
+                    <p dangerouslySetInnerHTML={{__html: sanitizedBody}}></p>
                 </div>
             </div>
             {message.replies && message.replies.map(reply => (
